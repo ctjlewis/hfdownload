@@ -8,6 +8,12 @@ using [hive partitioning](https://duckdb.org/docs/stable/data/partitioning/hive_
 - Parquet files are stored in `datasets/{org}/{name}/{split}`. 
 - Returns a DuckDB table ready for querying.
 
+## Installation
+
+```shell
+bun i -g hfdownload
+```
+
 ## Usage
 
 #### TypeScript

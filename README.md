@@ -10,10 +10,11 @@ using [hive partitioning](https://duckdb.org/docs/stable/data/partitioning/hive_
 
 ## Usage
 
+#### TypeScript
 ```typescript
 import { hfdownload } from "hfdownload";
 
-const table = await hfdownload("MathArena/aime_2025")
+const table = await hfdownload({ dataset: "MathArena/aime_2025" })
 const rows = table.getRowObjects()
 
 console.table(rows.at(0))
@@ -27,6 +28,11 @@ console.table(rows.at(0))
 │ problem_type │ [ "Number Theory" ] │                                                                                  │
 └──────────────┴─────────────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 */
+```
+
+#### CLI
+```shell
+hfdownload MathArena/aime_2025
 ```
 
 ### Parameters

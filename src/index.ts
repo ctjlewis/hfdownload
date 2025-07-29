@@ -5,20 +5,31 @@ import { mkdirSync, existsSync } from "fs";
 import { spawnSync } from "child_process";
 import { DuckDBInstance } from "@duckdb/node-api";
 
-export async function hfdownload(
+interface HfdownloadArgs {
   /**
    * The Hugging Face dataset name in the format `org/dataset`.
    */
-  dataset: string,
+  dataset: string;
   /**
    * The split of the dataset to download, e.g. `train`, `test`, `validation`.
    */
-  split = "train",
+  split?: string;
   /**
    * The dataset config or subset.
    */
-  config = "default"
-) {
+  config?: string;
+  /**
+   * Whether to only download files without loading them into DuckDB.
+   */
+  downloadOnly?: boolean;
+}
+
+export async function hfdownload({
+  dataset,
+  split = "train",
+  config = "default",
+  downloadOnly = false,
+}: HfdownloadArgs) {
   const spinner = ora().start(chalk.dim(`Preparing ${dataset}:${split}`));
 
   try {
@@ -69,8 +80,13 @@ export async function hfdownload(
       }
     }
 
+    if (downloadOnly) {
+      spinner.succeed(chalk.green(`Downloaded ${parquetFiles.length} files to ${baseDir}`));
+      return
+    }
+
     /** Open DuckDB connection to parquet files with hive partitioning. */
-    spinner.text = chalk.dim("Spinning up DuckDB Neo…");
+    spinner.text = chalk.dim("Creating DuckDB instance...");
     const instance = await DuckDBInstance.create();
     const db = await instance.connect();
 

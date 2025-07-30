@@ -10,9 +10,16 @@ using [hive partitioning](https://duckdb.org/docs/stable/data/partitioning/hive_
 
 ## Installation
 
-```shell
-bun i -g hfdownload
-```
+1. Install DuckDB:
+
+   https://duckdb.org/docs/installation
+
+2. Install this package globally for CLI, or in workspace-only with `bun i` for
+   just the TS interface:
+
+    ```shell
+    bun i -g hfdownload
+    ```
 
 ## Usage
 

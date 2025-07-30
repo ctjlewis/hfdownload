@@ -14,7 +14,7 @@ test("hfdownload downloads split files", async () => {
   }
   
   // Download the dataset
-  const result = await hfdownload(dataset, split);
+  const result = await hfdownload({ dataset, split });
   
   // Verify the result is returned
   expect(result).toBeDefined();

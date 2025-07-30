@@ -4,8 +4,9 @@ import chalk from "chalk";
 import { mkdirSync, existsSync } from "fs";
 import { spawnSync } from "child_process";
 import { DuckDBInstance } from "@duckdb/node-api";
+import type { DuckDBResultReader } from "@duckdb/node-api/lib/DuckDBResultReader";
 
-interface HfdownloadArgs {
+export interface HfdownloadArgs {
   /**
    * The Hugging Face dataset name in the format `org/dataset`.
    */
@@ -19,17 +20,27 @@ interface HfdownloadArgs {
    */
   config?: string;
   /**
-   * Whether to only download files without loading them into DuckDB.
+   * If true, only download the files without loading them into DuckDB.
+   * Defaults to false.
    */
   downloadOnly?: boolean;
 }
 
+export async function hfdownload(
+  args: HfdownloadArgs & { downloadOnly: true }
+): Promise<void>;
+
+export async function hfdownload(
+  args: HfdownloadArgs & { downloadOnly?: false | undefined }
+): Promise<DuckDBResultReader>;
+
+/* ---------- implementation ---------- */
 export async function hfdownload({
   dataset,
   split = "train",
   config = "default",
   downloadOnly = false,
-}: HfdownloadArgs) {
+}: HfdownloadArgs): Promise<void | DuckDBResultReader> {
   const spinner = ora().start(chalk.dim(`Preparing ${dataset}:${split}`));
 
   try {
